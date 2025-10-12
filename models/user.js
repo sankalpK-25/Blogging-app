@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-const {createHmac, randomBytes} = require("crypto")
+const {createHmac, randomBytes} = require("crypto");
+// removed accidental react import — not needed on the server
 const userSchema = mongoose.Schema({
     fullName: {
         type: String,
@@ -43,6 +44,21 @@ userSchema.pre("save", function (next) {
     user.password = hashedPassword;
 
     next();
+});
+
+userSchema.static("matchPasswordAndGenerateToken", async function(email,password) {
+    const user = await this.findOne({email});
+
+    if(!user) throw new Error("User Not Found!!");
+
+    const salt = user.salt;
+    const hashedPassword = user.password;
+
+    const providedHashedPassword = createHmac("sha256", salt).update(password).digest("hex");
+
+    if(providedHashedPassword !== hashedPassword) throw new Error("Incorrect Password or email");
+
+    return user;
 });
 
 const User = mongoose.model("user", userSchema);

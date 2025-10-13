@@ -6,10 +6,10 @@
     <%- include("./partials/head") %>
     <title>Log in Page</title>
 </head>
-<body>
+<body style ="background-color: #e9eef0;">
     <%- include("./partials/nav") %>
     
-    <div class="container" style="border: 2px solid grey; padding: 10px; border-radius: 5px; box-shadow: 10px 10px 5px rgba(235, 200, 255, 0.5);" >
+    <div class="container" style="border: 2px solid grey; padding: 10px; border-radius: 5px; box-shadow: 10px 10px 10px rgba(16, 16, 16, 0.1);" >
     <form method="post" action="/user/login">
        <div class="mb-3 ">
         <label for="email" class="form-label">Email address:</label>
@@ -19,8 +19,14 @@
         <label for="password" class="form-label">Password:</label>
         <input type="password" class="form-control" name="password" style="border: 2px solid grey; border-radius: 5px;" id="password">
       </div>
-      
       <button type="submit" class="btn btn-primary">Signup</button>
+
+     <% if (locals.error) { %>
+      <div class="alert alert-danger mt-10" role="alert" style="margin-top: 10px;">
+        <%= error %>
+      </div>
+     <% } %>
+
     </form>
     </div>
 

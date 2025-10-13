@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 const {createHmac, randomBytes} = require("crypto");
-// removed accidental react import — not needed on the server
+
+const {createToken} = require("../services/authentication")
 const userSchema = mongoose.Schema({
     fullName: {
         type: String,
@@ -58,7 +59,8 @@ userSchema.static("matchPasswordAndGenerateToken", async function(email,password
 
     if(providedHashedPassword !== hashedPassword) throw new Error("Incorrect Password or email");
 
-    return user;
+    const token = createToken(user);
+    return token;
 });
 
 const User = mongoose.model("user", userSchema);

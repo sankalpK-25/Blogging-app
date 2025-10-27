@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include("./partials/head") %>
+    <title>Document</title>
+</head>
+<body>
+    <%- include("./partials/nav") %>
+
+    <div class="container mt-4">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card shadow-sm">
+            <div class="card-header bg-white">
+              <h5 class="mb-0" style="color: black;">Create a new blog post</h5>
+            </div>
+            <div class="card-body">
+              <form action="/blog/add-blog" method="POST" enctype="multipart/form-data" novalidate>
+                <div class="mb-3">
+                  <label for="title" class="form-label">Title</label>
+                  <input name="title" type="text" class="form-control" id="title" placeholder="Give your post a clear, descriptive title" required>
+                  <div class="form-text" style="color: rgb(6, 236, 141);" >Keep the title under 100 characters.</div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="content" class="form-label">Content</label>
+                  <textarea name="content" id="content" rows="8" class="form-control" placeholder="Write your story..." required></textarea>
+                </div>
+
+                <div class="mb-3">
+                  <label for="coverImage" class="form-label">Cover image (optional)</label>
+                  <input name="coverImage" class="form-control" type="file" id="coverImage" accept="image/*">
+                  <div class="form-text">Accepted: jpg, png. Max 2MB.</div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <a href="/" class="btn btn-outline-secondary">Cancel</a>
+                  <button type="submit" class="btn btn-primary">Publish</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</body>
+    <%- include("./partials/script") %>
+
+</html>

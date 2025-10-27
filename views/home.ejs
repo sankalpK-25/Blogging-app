@@ -6,8 +6,36 @@
     <%- include("./partials/head") %>
     <title>Homepage</title>
 </head>
-<body class="bg-dark">
+<body>
     <%- include("./partials/nav") %>
+
+<div class="container row gap-3 mt-5">
+
+         <% if (locals.blogs) { %>
+     <% blogs.forEach(blog => { %>
+                <div class="card mb-3" style="width: 18rem;">
+                        <% if (blog.coverImageURL) { %>
+                            <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="...">
+                        <% } %>
+                        <div class="card-body">
+                                <h5 class="card-title"><%= blog.title %></h5>
+                                <div class="d-flex align-items-center mt-2" style="gap:8px;">
+                                    <img src="<%= (blog.author && blog.author.profileImage) ? blog.author.profileImage : '/profile-photos/default.png' %>" alt="author" class="rounded-circle" style="width:28px;height:28px;object-fit:cover;">
+                                    <div class="small text-muted"><%= blog.author ? blog.author.fullName : 'Unknown' %></div>
+                                </div>
+                                <a href="/blog/<%= blog._id %>" class="btn btn-primary mt-3">Read</a>
+                        </div>
+                </div>
+     <% }) %>
+    <% } else { %>
+
+    <div class="container"  >
+        <p style="color: gray;">No Blogs to Read....</p>
+    </div>
+
+    <% } %>
+
+</div>
 </body>
 <%- include("./partials/script") %>
 </html>

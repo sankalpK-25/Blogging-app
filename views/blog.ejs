@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include("./partials/head") %>
+    <title><%= blog.title %> - Thinkflow</title>
+</head>
+<body>
+    <%- include("./partials/nav") %>
+
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <% if (blog.coverImageURL) { %>
+                        <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="cover image">
+                    <% } %>
+                    <div class="card-body">
+                        <h1 class="h4 mb-2"><%= blog.title %></h1>
+
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="<%= (blog.author && blog.author.profileImage) ? blog.author.profileImage : '/profile-photos/default.png' %>" alt="author" class="rounded-circle me-2" style="width:40px;height:40px;object-fit:cover;">
+                            <div>
+                                <div class="fw-bold"><%= blog.author ? blog.author.fullName : 'Unknown' %></div>
+                                <div class="small text-muted"><%= blog.createdAt ? blog.createdAt.toLocaleString() : '' %></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4" style="">
+                            <%= blog.content %>
+                        </div>
+
+                        <a href="/" class="btn btn-outline-primary">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include("./partials/script") %>
+</body>
+</html>

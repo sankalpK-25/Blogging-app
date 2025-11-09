@@ -10,11 +10,18 @@
     <%- include("./partials/nav") %>
     
     <div class="container" style="border: 2px solid grey; padding: 10px; border-radius: 5px;" >
-    <form method="post" action="/user/signup">
+    <form method="post" action="/user/signup" enctype="multipart/form-data">
       <div class="mb-3" >
         <label for="fullName" class="form-label">Full Name:</label>
         <input type="text" class="form-control" name="fullName" style="border: 2px solid grey; border-radius: 5px;" id="email" aria-describedby="emailHelp">
       </div>
+
+      <div class="mb-3">
+        <label for="profileImage" class="form-label">Profile Image (optional)</label>
+        <input name="profileImage" class="form-control" type="file" id="profileImage" accept="image/*">
+        <div class="form-text">Accepted: jpg, png. Max 2MB.</div>
+      </div>
+
        <div class="mb-3 ">
         <label for="email" class="form-label">Email address:</label>
         <input type="email" class="form-control" name="email" style="border: 2px solid grey; border-radius: 5px;" id="email" aria-describedby="emailHelp">
@@ -25,6 +32,13 @@
       </div>
       
       <button type="submit" class="btn btn-primary">Signup</button>
+
+       <% if (locals.error) { %>
+      <div class="alert alert-danger mt-10" role="alert" style="margin-top: 10px;">
+        <%= error %>
+      </div>
+     <% } %>
+     
     </form>
     </div>
 

@@ -12,7 +12,7 @@ const commentSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref:"user"
     }
-});
+},{ timestamps: true });
 
 const Comment = mongoose.model("comment", commentSchema);
 

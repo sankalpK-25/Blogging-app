@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <%- include("./partials/head") %>
+    <title>Generate with Ai</title>
+</head>
+<body>
+    <%- include("./partials/nav") %>
+
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0" style="color: black;">Generate Content with AI</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="aiForm" >
+                                                                <div class="mb-3">
+                                                                        <label for="prompt" class="form-label">AI Prompt</label>
+                                                                        <textarea id="prompt" name="prompt" rows="5" class="form-control" placeholder="Describe the blog idea, tone, and points to cover" required></textarea>
+                                                                        <div class="form-text">Be specific for better results (e.g., audience, tone, length).</div>
+                                                                </div>
+
+                                                                <div class="row g-3 mb-3">
+                                                                    <div class="col-md-8">
+                                                                        <label for="coverImage" class="form-label">Upload cover image (optional)</label>
+                                                                        <input id="coverImage" name="coverImage" class="form-control" type="file" accept="image/*">
+                                                                        <div class="form-text">Optional: upload your own cover image.</div>
+                                                                    </div>
+                                                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="/" class="btn btn-outline-secondary">Back</a>
+                                    <div>
+                                        <button type="button" id="generateBtn" class="btn btn-sm btn-outline-info me-2">Generate</button>
+                                        <button type="button" id="insertBtn" class="btn btn-primary">Use in Post</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <hr>
+                            <h6>Preview</h6>
+                            <div id="previewArea">
+                                 <!-- Loading Overlay -->
+                                    <div id="loadingOverlay" 
+                                        style="
+                                            display:none; 
+                                            position:fixed; 
+                                            top:0; 
+                                            left:0; 
+                                            width:100%; 
+                                            height:100%; 
+                                            background:rgba(255,255,255,0.8); 
+                                            backdrop-filter: blur(4px);
+                                            z-index:9999; 
+                                            align-items:center; 
+                                            justify-content:center;
+                                        ">
+                                        
+                                        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+
+                                        <p class="mt-3 fw-bold">Generating content… please wait</p>
+                                    </div>
+
+
+                                <!--Ai Output divs-->
+                                <div id="aiOutput"  class="form-control p-3" style="min-height: 300px;" rows="10" readonly placeholder="Generated text will appear here...">
+                                    <h4 id="aiTitle" class="fw-bold mt-3"></h4>
+                                    <p id="aiIntro" class="text-muted"></p>
+
+                                    <div id="aiSections" class="row g-3"></div>
+
+                                    <h5 class="mt-4">Conclusion</h5>
+                                    <p id="aiConclusion"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+               
+
+
+
+
+        <%- include("./partials/script") %>
+       
+        
+
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+         <script>
+
+            const promptInput = document.getElementById("prompt");
+            const generateBtn = document.getElementById("generateBtn");
+            const previewDiv = document.getElementById("aiOutput");
+            const aiTitle = document.getElementById("aiTitle");
+            const aiIntro = document.getElementById("aiIntro");
+            const aiSections = document.getElementById("aiSections");
+            const aiConclusion = document.getElementById("aiConclusion");
+            const insertBtn = document.getElementById("insertBtn");
+
+
+
+            const loadingOverlay = document.getElementById("loadingOverlay");
+
+            generateBtn.addEventListener("click", async () => {
+                const prompt = promptInput.value;
+
+                loadingOverlay.style.display = "flex"; // 🔵 SHOW LOADER
+
+                try {
+                    const res = await fetch("/api/ai/generate", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ prompt })
+                    });
+
+                    const result = await res.json();
+
+                    if (!result.success) {
+                       previewDiv.innerHTML = `<h1>AI ERROR:${result.error}</h1>`;
+                        return;
+                    }
+
+                    const data = result.data;
+
+                    aiTitle.innerText = data.title;
+                    aiIntro.innerText = data.introduction;
+
+                    let html = "";
+                    data.sections.forEach(sec => {
+                        html += `<h5>${sec.heading}</h5>
+                                 <p>${sec.content}</p>`;
+                    });
+
+                    aiSections.innerHTML = html;
+
+                    aiConclusion.innerText = data.conclusion;
+
+                } catch (err) {
+                    previewDiv.innerHTML = `<h1>AI ERROR:${err.message}</h1>`;
+
+                } finally {
+                    loadingOverlay.style.display = "none"; // 🟢 HIDE LOADER NO MATTER WHAT
+                }
+            });
+
+
+
+            insertBtn.addEventListener("click", async () => {
+                const formData = new FormData(); 
+
+                const headings = aiSections.querySelectorAll("h5");
+                const paragraphs = aiSections.querySelectorAll("#aiSections p");
+
+                const sections = [];
+
+                headings.forEach((h5,index) => {
+                    sections.push({
+                        headings: h5.textContent,
+                        content: paragraphs[index]?.textContent || ""
+                    });
+                })
+
+                const structuredContent = {
+                    introduction: aiIntro.textContent,
+                    sections,
+                    conclusion: aiConclusion.textContent
+                };
+
+                formData.append("title", aiTitle.textContent);
+                formData.append("content", JSON.stringify(structuredContent));
+                formData.append("coverImage", document.getElementById("coverImage").files[0]);
+
+                const res = await fetch("/blog/add-blog", {
+                    method: "POST",
+                    body: formData  // ❗ no headers, browser sets them for multipart
+                });
+
+                if(res.ok){
+                    window.location.href = "/"
+                }
+            });
+            </script>
+
+
+</body>
+</html>

@@ -27,8 +27,29 @@
                             </div>
                         </div>
 
-                        <div class="mb-4" style="">
-                            <%= blog.content %>
+                        <div class="mb-4">
+
+                            <% if (blog.content.introduction && blog.content.introduction.trim() !== "") { %>
+                                <p><%= blog.content.introduction %></p>
+                            <% } %>
+
+                            <% if (blog.content.sections && blog.content.sections.length > 0) { %>
+                                <% blog.content.sections.forEach(sec => { %>
+                                    <h4 class="mt-3"><%= sec.heading %></h4>
+                                    <p><%= sec.content %></p>
+                                <% }) %>
+                            <% } %>
+
+                            <% if (blog.content.conclusion && blog.content.conclusion.trim() !== "") { %>
+                                <h5 class="mt-4">Conclusion</h5>
+                                <p><%= blog.content.conclusion %></p>
+                            <% } %>
+
+                            <% if (blog.content.raw && blog.content.raw.trim() !== "") { %>
+                                <!-- raw is HTML written by human or editor -->
+                                <div class="mt-3"><%- blog.content.raw %></div>
+                            <% } %>
+
                         </div>
 
                         <a href="/" class="btn btn-outline-primary">Back</a>

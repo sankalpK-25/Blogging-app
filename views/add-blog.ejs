@@ -35,9 +35,12 @@
                   <div class="form-text">Accepted: jpg, png. Max 2MB.</div>
                 </div>
 
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between align-items-center">
                   <a href="/" class="btn btn-outline-secondary">Cancel</a>
-                  <button type="submit" class="btn btn-primary">Publish</button>
+                  <div>
+                    <a type="button" role="button" href="/add-blogs/generate-with-ai"  id="generateAiBtn" class="btn btn-sm btn-outline-info me-2" title="Auto-generate title and content with AI">Generate with AI</a>
+                    <button type="submit" class="btn btn-primary">Publish</button>
+                  </div>
                 </div>
               </form>
             </div>
@@ -46,7 +49,21 @@
       </div>
     </div>
     
-</body>
+    <script>
+      (function(){
+        const btn = document.getElementById('generateAiBtn');
+        if(!btn) return;
+        btn.addEventListener('click', function(){
+          btn.disabled = true;
+          const titleEl = document.getElementById('title');
+          const contentEl = document.getElementById('content');
+          if(titleEl) titleEl.value = 'AI-generated: A quick blog idea';
+          if(contentEl) contentEl.value = 'This is an AI-generated draft. Edit to add your voice and details.';
+          setTimeout(()=>{ btn.disabled = false; }, 800);
+        });
+      })();
+    </script>
+  </body>
     <%- include("./partials/script") %>
 
 </html>

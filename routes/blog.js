@@ -41,18 +41,55 @@ const storage = multer.diskStorage({
 
 const upload = multer( { storage: storage});
 
-router.post("/add-blog",upload.single("coverImage"), async (req,res) => {
-    const {title,content} = req.body;
 
-    await Blog.create({
+
+router.post("/add-blog",upload.single("coverImage"), async (req,res) => {
+
+    let {title,content} = req.body;
+    const coverImageURL = req.file ? `/uploads/${req.file?.filename}` : null;
+
+
+
+    let parsedContent;
+    let isStructured ;
+    try{
+        parsedContent = JSON.parse(content);
+        content = parsedContent
+        isStructured = true;
+
+    }catch(err){
+        parsedContent = content;
+        isStructured = false;
+    }
+
+    if(isStructured){
+        await Blog.create({
         title,
-        coverImageURL: `/uploads/${req.file.filename}`,
-        content: content +" "+ generateRandomTextContent(100),
+        coverImageURL,
+        content: {
+            introduction: parsedContent.introduction,
+            sections: parsedContent.sections,
+            conclusion: parsedContent.conclusion
+        },
         author: req.user.id,
+        isStructured
         });
+    }
+    else{
+        await Blog.create({
+        title,
+        coverImageURL,
+        content: { 
+            raw: content,
+        },
+        author: req.user.id,
+        isStructured
+        });
+    }
 
     return res.redirect("/");
 })
+
 
 router.get("/:id", async (req,res) => {
     const blogId = req.params.id;
@@ -84,5 +121,9 @@ router.post("/:id/comment", async (req,res) => {
 
     return res.redirect(`/blog/${blogId}`);
 
+})
+
+router.post("/generate-with-ai", async (req,res) => {
+    
 })
 module.exports = router;

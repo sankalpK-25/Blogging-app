@@ -1,5 +1,39 @@
 const mongoose = require("mongoose");
 
+const sectionSchema = mongoose.Schema({
+    heading: {
+        type: String,
+    },
+    content: {
+        type:String,
+    }
+},{ _id: false});
+
+
+const contentSchema = mongoose.Schema({
+    raw: {
+        type: String,
+        default: "",
+    },
+    introduction: {
+        type: String,
+        default: "",
+    },
+    sections: {
+        type: [sectionSchema],
+        default: []
+    },
+    conclusion: {
+        type: String,
+        default: ""
+    },
+    isStructured: {
+        type:Boolean,
+        default: false
+    }
+});
+
+
 const blogSchema =  mongoose.Schema({
     title: {
         type : String,
@@ -9,8 +43,8 @@ const blogSchema =  mongoose.Schema({
         type: String,
     },
     content: {
-        type: String,
-        required: true
+        type: contentSchema,
+        required: true,
     },
     author: {
         type: mongoose.Types.ObjectId,

@@ -18,5 +18,9 @@ router.get("/login", (req,res) => {
 router.get("/add-blogs" , async (req,res) => {
     
     return res.render("add-blog" , {user: req.user})
+});
+
+router.get("/add-blogs/generate-with-ai", async (req,res) => {
+    return res.render("generate-with-ai", {user: req.user});
 })
 module.exports = router;

@@ -8,11 +8,8 @@ dotenv.config();
 const staticRoute = require("./routes/staticRoute");
 const userRoute = require("./routes/user");
 const blogRoute = require("./routes/blog")
-<<<<<<< HEAD
 const aiRoute = require("./routes/aiRoute");
 const { checkForAuthenticationCookie } = require("./middlewares/authentication");
-=======
->>>>>>> a20a6fd41f83490e1c87405a543c15b6a9a1ffda
 const Blog = require("./models/blog");
 const { checkForAuthenticationCookie } = require("./middlewares/authentication");
 
@@ -50,9 +47,5 @@ app.get("/", async (req, res) => {
 	const blogs = await Blog.find({}).populate('author', 'fullName profileImage');
 	return res.render("home", { user: req.user, blogs: blogs});
 });
-<<<<<<< HEAD
 
 app.listen(PORT, () => console.log(`Server is online at PORT ${PORT}`))
-=======
-app.listen(PORT, () => console.log(`Server is online at PORT ${PORT}`))
->>>>>>> a20a6fd41f83490e1c87405a543c15b6a9a1ffda

@@ -11,7 +11,6 @@ const blogRoute = require("./routes/blog")
 const aiRoute = require("./routes/aiRoute");
 const { checkForAuthenticationCookie } = require("./middlewares/authentication");
 const Blog = require("./models/blog");
-const { checkForAuthenticationCookie } = require("./middlewares/authentication");
 
 
 const app = express();

@@ -9,24 +9,7 @@ const multer = require("multer");
 const path =  require("path");
 
 
-function generateRandomTextContent(wordCount){
-    let text = '';
 
-    const characters = 'abcdefghijklmnopqrstuvwxyz';
-
-    const characterArray = characters.split('');
-
-    for (let char = 0; char <= wordCount; char++) {
-        
-        let randomNumber = Math.floor(Math.random() * 26)
-
-        let char = characterArray[randomNumber];
-
-        text += char; 
-    }
-
-    return text;
-}
 
 const storage = multer.diskStorage({
     destination: function (req,file,cb){

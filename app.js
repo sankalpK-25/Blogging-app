@@ -16,6 +16,7 @@ const Blog = require("./models/blog");
 const app = express();
 
 const PORT = process.env.PORT;
+console.log("MONGO_URL set:", !!process.env.MONGO_URL);
 
 mongoose.connect(process.env.MONGO_URL)
 .then(() => console.log("Mongo Connected"))

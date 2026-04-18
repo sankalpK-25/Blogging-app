@@ -43,12 +43,11 @@
 
                             <hr>
                             <h6>Preview</h6>
-                            <div id="previewArea">
+                            <div id="previewArea" style="position: relative;">
                                  <!-- Loading Overlay -->
                                     <div id="loadingOverlay" 
                                         style="
-                                            display:none; 
-                                            position:fixed; 
+                                            position:absolute; 
                                             top:0; 
                                             left:0; 
                                             width:100%; 
@@ -58,6 +57,7 @@
                                             z-index:9999; 
                                             align-items:center; 
                                             justify-content:center;
+                                            display:none; 
                                         ">
                                         
                                         <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
@@ -74,8 +74,6 @@
                                     <p id="aiIntro" class="text-muted"></p>
 
                                     <div id="aiSections" class="row g-3"></div>
-
-                                    <h5 class="mt-4">Conclusion</h5>
                                     <p id="aiConclusion"></p>
                                 </div>
                             </div>

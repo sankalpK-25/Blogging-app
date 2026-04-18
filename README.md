@@ -1,119 +1,128 @@
-<!--
-	Blogging-app
-	A clean, Bootstrap-styled blogging platform with optional AI content helpers.
--->
+# Blogging Project 2
 
-# Blogging-app
+A full-stack blogging application built with Node.js, Express, MongoDB, and EJS. Users can sign up, log in, publish blog posts with cover images, comment on posts, and generate blog content with AI before publishing.
 
-> A modern, minimal blogging platform built with Node.js, Express, EJS and MongoDB. It includes user authentication, image uploads, a commenting system and optional AI-assisted content generation.
+## Features
 
----
+- User signup and login with JWT-based authentication stored in cookies
+- Profile image upload during registration
+- Create blog posts with optional cover images
+- Support for both plain-text and structured blog content
+- Comment system for individual blog posts
+- AI-powered blog generation using the Hugging Face Inference API
+- Server-rendered UI with EJS templates and static asset support
 
-## Key Features
+## Tech Stack
 
-- User authentication and profile management
-- Create blog posts with optional cover images (file uploads via Multer)
-- Comment on posts with author attribution
-- Bootstrap-based responsive UI using EJS templates
-- AI content generation UI (client + server hooks) to draft posts and optionally include AI-generated images
+- Node.js
+- Express.js
+- MongoDB with Mongoose
+- EJS
+- Multer
+- JSON Web Tokens
+- Hugging Face Inference API
 
----
+## Project Structure
 
-## Quick Demo
-
-1. Sign up / Log in
-2. Create a new post via `Add Blog` (upload a cover image if you want)
-3. Or use `Generate with AI` to produce a draft, preview it, then insert it into the post form
-
----
-
-## Getting Started
-
-Prerequisites
-
-- Node.js (v16+ recommended)
-- MongoDB connection (local or Atlas)
-
-Install and run:
-
-```powershell
-Set-Location -LiteralPath 'd:\web dev practice\Node Practices\Blogging Project 2'
-npm install
-# create a .env with the variables listed below
-node app.js
+```text
+.
+|-- app.js
+|-- controllers/
+|-- middlewares/
+|-- models/
+|-- public/
+|-- routes/
+|-- services/
+|-- views/
+|-- package.json
 ```
-
-Open http://localhost:PORT (PORT is read from your `.env`, default: 3000 if set so)
-
----
 
 ## Environment Variables
 
-Create a `.env` file at the project root with at least:
+Create a `.env` file in the project root and add:
 
-```
+```env
 PORT=3000
-MONGO_URL=mongodb+srv://<user>:<password>@cluster0.../dbname
-# Add any AI provider keys as server-only variables (do NOT commit .env)
-AI_API_KEY=your_api_key_here
+MONGO_URL=your_mongodb_connection_string
+JWT_KEY=your_jwt_secret
+API_KEY=your_huggingface_api_key
 ```
 
-Security note: Never commit `.env` or secrets to Git — add `.env` to `.gitignore`.
-If a secret is accidentally committed, revoke and rotate it immediately.
+## Installation
 
----
+```bash
+npm install
+```
 
-## Project Structure (important files)
+## Run Locally
 
-- `app.js` — Application entry, routing and middleware
-- `routes/` — Express routes (`blog.js`, `user.js`, `aiRoute.js`, etc.)
-- `views/` — EJS templates (pages and partials)
-- `public/` — Static assets: uploads, styles, profile-photos
-- `models/` — Mongoose models for `User`, `Blog`, `Comment`
-- `services/` — Helper services (authentication, AI callers)
+Start the development server:
 
----
+```bash
+npm run dev
+```
 
-## AI Integration
+Start the app normally:
 
-This app includes a UI to generate blog drafts with AI. For security and reliability:
+```bash
+npm start
+```
 
-- Keep AI keys on the server and call provider APIs from a protected server route (examples under `routes/aiRoute.js`).
-- The client UI will POST to `/api/ai/generate` and expects JSON `{ success, data }` in response.
+Then open `http://localhost:3000` in your browser, or the port you set in `.env`.
 
-If you want me to wire a simple AI server route (OpenAI, Hugging Face, etc.), I can add a safe server-side example that reads a key from `.env` and returns generated content.
+## Main Routes
 
----
+### Page Routes
 
-## Uploads & Images
+- `GET /signup` - signup page
+- `GET /login` - login page
+- `GET /` - homepage with published blogs
+- `GET /add-blogs` - create a new blog
+- `GET /add-blogs/generate-with-ai` - AI blog generation page
+- `GET /blog/:id` - single blog page with comments
 
-- Cover images and profile photos are stored in `public/uploads` and `public/profile-photos`.
-- The server uses Multer for multipart handling in routes that accept file uploads (e.g. `/blog/add-blog`).
+### Auth Routes
 
----
+- `POST /user/signup` - register a new user
+- `POST /user/login` - log in and receive auth cookie
+- `GET /user/logout` - log out current user
 
-## Contributing
+### Blog Routes
 
-Contributions are welcome. Suggested workflow:
+- `POST /blog/add-blog` - publish a blog post
+- `POST /blog/:id/comment` - add a comment to a blog
 
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feat/awesome`)
-3. Make changes, run the app and tests
-4. Open a pull request with a clear description
+### AI Route
 
-Please avoid committing secrets or large binary files.
+- `POST /api/ai/generate` - generate structured blog content from a prompt
 
----
+## How AI Blog Generation Works
 
-## Troubleshooting
+The AI page sends a prompt to the backend, which calls the Hugging Face Inference API and expects a JSON response in this format:
 
-- Push blocked by GitHub? If GitHub rejects a push due to secret scanning, revoke the leaked key and remove it from the repo history before pushing again.
-- Profile image not showing? Verify `public/profile-photos/<filename>` exists and that `app.js` serves static files: `app.use(express.static(path.resolve('./public')))`.
+```json
+{
+  "title": "string",
+  "introduction": "string",
+  "sections": [
+    {
+      "heading": "string",
+      "content": "string"
+    }
+  ],
+  "conclusion": "string"
+}
+```
 
----
+That generated content can then be inserted directly into a new post and saved to MongoDB.
 
-## License & Contact
+## Notes
 
-This project is provided as-is for learning and demo purposes. If you want help adding features (AI server route, image generation, CI), open an issue or contact the maintainer.
+- Uploaded cover images are stored in `public/uploads`
+- Uploaded profile images are stored in `public/profile-photos`
+- Authentication state is read from the `token` cookie
+- `npm test` is currently a placeholder and does not run automated tests yet
 
-Happy coding! 🚀
+## Author
+
+Sankalp

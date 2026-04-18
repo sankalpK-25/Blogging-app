@@ -9,11 +9,11 @@
 <body>
     <%- include("./partials/nav") %>
 
-<div class="container row gap-3 p-3">
+<div class="container row gap-3 p-3 mt-4">
 
          <% if (locals.blogs) { %>
      <% blogs.forEach(blog => { %>
-                <div class="card mb-3" style="width: 18rem;">
+                <div class="card mb-3 shadow" style="width: 18rem; box-shadow: 0 14px 28px rgba(27, 41, 74, 0.36) !important;">
                         <% if (blog.coverImageURL) { %>
                             <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="...">
                         <% } %>

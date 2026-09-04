@@ -3,7 +3,13 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const dotenv = require("dotenv");
+const dns = require("dns");
 dotenv.config();
+
+// Node's resolver can pick up an unreachable/broken DNS server from Windows
+// (e.g. a virtual adapter) and fail the mongodb+srv:// SRV lookup even when
+// the OS itself resolves fine. Force known-good resolvers to avoid that.
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const staticRoute = require("./routes/staticRoute");
 const userRoute = require("./routes/user");
@@ -48,4 +54,5 @@ app.get("/", async (req, res) => {
 	return res.render("home", { user: req.user, blogs: blogs});
 });
 
-app.listen(PORT, () => console.log(`Server is online at PORT ${PORT}`))
+app.listen(PORT, () => console.log(`Server is online at http://localhost:${PORT}`))
+

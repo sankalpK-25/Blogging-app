@@ -25,18 +25,19 @@ router.post("/signup",upload.single("profileImage"), async (req,res) => {
     const { fullName, email, password} = req.body;
 
     try {
-        await User.create({
-            fullName,
-            email,
-            password,
-            profileImage : `/profile-photos/${req.file.filename}`,
-        });
+        const userData = { fullName, email, password };
+
+        if (req.file) {
+            userData.profileImage = `/profile-photos/${req.file.filename}`;
+        }
+
+        await User.create(userData);
 
     return res.redirect("/login");
 
     } catch (error) {
-        
-        return res.render("signup", { error: "Email already exists!!!, Go to Login"} );
+        console.log(error);
+        return res.render("signup", { error: "SOmething went Wrong while Signup"} );
     }
 });
 

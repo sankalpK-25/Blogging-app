@@ -3,6 +3,5 @@
 .env.*
 node_modules
 node_modules*
-public/profile-photos
-public/uploads
+
 
